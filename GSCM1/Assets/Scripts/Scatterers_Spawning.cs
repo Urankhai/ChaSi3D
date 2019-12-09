@@ -29,7 +29,12 @@ public class Scatterers_Spawning : MonoBehaviour
     {
         v_shift = new Vector3(0,0,0); //new Vector3(2.3f, 0.0f, -1.81f);
         //if (nearBuildings == null)
-        //Buildings = GameObject.FindGameObjectsWithTag("Reflecting_Obstacles");
+        Buildings = GameObject.FindGameObjectsWithTag("Reflecting_Obstacles");
+        for (int k = 0; k < Buildings.Length; k++)
+        {
+            var BuildingRenderer = Buildings[k].GetComponent<Renderer>();
+            BuildingRenderer.material = MPC2_mat;
+        }
 
         //Debug.Log("0");
         //Debug.Log("Number of buildings = " + Buildings.Length);
@@ -223,12 +228,12 @@ public class Scatterers_Spawning : MonoBehaviour
                             // generate random positions for a given number of MPCs
                             Vector3[] MPC1_randomArray = new Vector3[num_MPC1];
                             Vector3[] MPC1_positionArray = new Vector3[num_MPC1];
-                            Collider MPC1_Collider; // MPCs are considered as transperent for rays
+                            //Collider MPC1_Collider; // MPCs are considered as transperent for rays
                             for (int i = 0; i < num_MPC1; i++)
                             {
                                 MPC1_randomArray[i].x = Random.Range(-edge_len.magnitude / 2, edge_len.magnitude / 2); // takes into account the length of the wall
                                 MPC1_randomArray[i].y = Random.Range(1.2f, 2.2f); // takes into account the average height of cars and dispersion 50 cm
-                                MPC1_randomArray[i].z = Random.Range(-WW1 / 2, WW1 / 2); // takes into account the width of MPCs from the paper (3 meters)
+                                MPC1_randomArray[i].z = -1.0f + Random.Range(-WW1 / 2, WW1 / 2); // takes into account the width of MPCs from the paper (3 meters)
                                 //Debug.Log("e1 vector = " + edge_len.normalized);
                                 //Debug.Log("e2 vector = " + floor_nrml[k + 1]);
 
@@ -246,14 +251,15 @@ public class Scatterers_Spawning : MonoBehaviour
                                 var capsuleRenderer = capsule.GetComponent<Renderer>();
                                 //Call SetColor using the shader property name "_Color" and setting the color to red
                                 //capsuleRenderer.material.SetColor("_Color", Color.green);
+                                //capsuleRenderer.lightProbeUsage = "off";
                                 capsuleRenderer.material = MPC1_mat;
-                                capsule.transform.localScale -= new Vector3(0.2f, 0.2f, 0.2f);
+                                capsule.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
                                 capsule.name = "MPC1"+floor_nrml[k + 1];
                                 capsule.tag = "MPC1";
 
                                 // Spheres colliders are disabled for MPCs
-                                MPC1_Collider = capsule.GetComponent<Collider>();
-                                MPC1_Collider.enabled = false;
+                                //MPC1_Collider = capsule.GetComponent<Collider>();
+                                //MPC1_Collider.enabled = false;
                                 
                                 /*Mesh mesh = capsule.GetComponent<MeshFilter>().mesh;
                                 mesh.normals[0] = floor_nrml[k + 1];
@@ -271,7 +277,7 @@ public class Scatterers_Spawning : MonoBehaviour
                             // generate random positions for a given number of MPCs
                             Vector3[] MPC2_randomArray = new Vector3[num_MPC2];
                             Vector3[] MPC2_positionArray = new Vector3[num_MPC2];
-                            Collider MPC2_Collider;
+                            //Collider MPC2_Collider;
                             for (int i = 0; i < num_MPC2; i++)
                             {
                                 MPC2_randomArray[i].x = Random.Range(-edge_len.magnitude / 2, edge_len.magnitude / 2); // takes into account the length of the wall
@@ -288,12 +294,12 @@ public class Scatterers_Spawning : MonoBehaviour
                                 var capsuleRenderer2 = capsule2.GetComponent<Renderer>();
                                 //capsuleRenderer2.material.SetColor("_Color", Color.red);
                                 capsuleRenderer2.material = MPC2_mat;
-                                capsule2.transform.localScale -= new Vector3(0.2f, 0.2f, 0.2f);
+                                capsule2.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
                                 capsule2.name = "MPC2"+floor_nrml[k + 1];
                                 capsule2.tag = "MPC2";
 
-                                MPC2_Collider = capsule2.GetComponent<Collider>();
-                                MPC2_Collider.enabled = false;
+                                //MPC2_Collider = capsule2.GetComponent<Collider>();
+                                //MPC2_Collider.enabled = false;
                             }
                         }
 
@@ -305,7 +311,7 @@ public class Scatterers_Spawning : MonoBehaviour
                             // generate random positions for a given number of MPCs
                             Vector3[] MPC3_randomArray = new Vector3[num_MPC3];
                             Vector3[] MPC3_positionArray = new Vector3[num_MPC3];
-                            Collider MPC3_Collider;
+                            //Collider MPC3_Collider;
                             for (int i = 0; i < num_MPC3; i++)
                             {
                                 MPC3_randomArray[i].x = Random.Range(-edge_len.magnitude / 2, edge_len.magnitude / 2); // takes into account the length of the wall
@@ -322,12 +328,12 @@ public class Scatterers_Spawning : MonoBehaviour
                                 var capsuleRenderer3 = capsule3.GetComponent<Renderer>();
                                 //capsuleRenderer3.material.SetColor("_Color", Color.yellow);
                                 capsuleRenderer3.material = MPC3_mat;
-                                capsule3.transform.localScale -= new Vector3(0.2f, 0.2f, 0.2f);
+                                capsule3.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
                                 capsule3.name = "MPC3"+floor_nrml[k + 1];
                                 capsule3.tag = "MPC3";
 
-                                MPC3_Collider = capsule3.GetComponent<Collider>();
-                                MPC3_Collider.enabled = false;
+                                //MPC3_Collider = capsule3.GetComponent<Collider>();
+                                //MPC3_Collider.enabled = false;
                             }
                         }
 
@@ -340,7 +346,7 @@ public class Scatterers_Spawning : MonoBehaviour
                             // generate random positions for a given number of MPCs
                             Vector3[] DMC_randomArray = new Vector3[num_DMC];
                             Vector3[] DMC_positionArray = new Vector3[num_DMC];
-                            Collider DMC_Collider;
+                            //Collider DMC_Collider;
                             for (int i = 0; i < num_DMC; i++)
                             {
                                 DMC_randomArray[i].x = Random.Range(-edge_len.magnitude / 2, edge_len.magnitude / 2); // takes into account the length of the wall
@@ -357,11 +363,11 @@ public class Scatterers_Spawning : MonoBehaviour
                                 var capsuleRendererD = capsuleD.GetComponent<Renderer>();
                                 //capsuleRendererD.material.SetColor("_Color", Color.grey);
                                 capsuleRendererD.material = DMC_mat;
-                                capsuleD.transform.localScale -= new Vector3(0.6f, 0.6f, 0.6f);
+                                capsuleD.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
                                 capsuleD.name = "DMC"+floor_nrml[k + 1];
                                 capsuleD.tag = "DMC";
-                                DMC_Collider = capsuleD.GetComponent<Collider>();
-                                DMC_Collider.enabled = false;
+                                //DMC_Collider = capsuleD.GetComponent<Collider>();
+                                //DMC_Collider.enabled = false;
                                 
 
 //                                var whereitfaces = capsuleD.GetComponent<Data_holding>();

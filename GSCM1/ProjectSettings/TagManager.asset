@@ -12,6 +12,7 @@ TagManager:
   - MPC3
   - Antenna
   - DMC
+  - mat_colors
   layers:
   - Default
   - TransparentFX
