@@ -30,11 +30,11 @@ public class Scatterers_Spawning : MonoBehaviour
         v_shift = new Vector3(0,0,0); //new Vector3(2.3f, 0.0f, -1.81f);
         //if (nearBuildings == null)
         Buildings = GameObject.FindGameObjectsWithTag("Reflecting_Obstacles");
-        for (int k = 0; k < Buildings.Length; k++)
+        /*for (int k = 0; k < Buildings.Length; k++)
         {
             var BuildingRenderer = Buildings[k].GetComponent<Renderer>();
             BuildingRenderer.material = MPC2_mat;
-        }
+        }*/
 
         //Debug.Log("0");
         //Debug.Log("Number of buildings = " + Buildings.Length);
@@ -99,7 +99,7 @@ public class Scatterers_Spawning : MonoBehaviour
                 if (vert.y == 0)
                 {
                     //Debug.Log("Vertex #" + vert_count + vert + normals[vert_count]);
-                    Debug.DrawRay(vert + v_shift, normals[vert_count] * 10, Color.yellow, 10.0f);
+                    //Debug.DrawRay(vert + v_shift, normals[vert_count] * 10, Color.yellow, 10.0f);
 
                     /*
                     string sphere_name = "sphere" + vert_count;
@@ -233,7 +233,7 @@ public class Scatterers_Spawning : MonoBehaviour
                             {
                                 MPC1_randomArray[i].x = Random.Range(-edge_len.magnitude / 2, edge_len.magnitude / 2); // takes into account the length of the wall
                                 MPC1_randomArray[i].y = Random.Range(1.2f, 2.2f); // takes into account the average height of cars and dispersion 50 cm
-                                MPC1_randomArray[i].z = -1.0f + Random.Range(-WW1 / 2, WW1 / 2); // takes into account the width of MPCs from the paper (3 meters)
+                                MPC1_randomArray[i].z = Random.Range(-WW1 / 2, WW1 / 2); // takes into account the width of MPCs from the paper (3 meters)
                                 //Debug.Log("e1 vector = " + edge_len.normalized);
                                 //Debug.Log("e2 vector = " + floor_nrml[k + 1]);
 
@@ -253,7 +253,7 @@ public class Scatterers_Spawning : MonoBehaviour
                                 //capsuleRenderer.material.SetColor("_Color", Color.green);
                                 //capsuleRenderer.lightProbeUsage = "off";
                                 capsuleRenderer.material = MPC1_mat;
-                                capsule.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
+                                capsule.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
                                 capsule.name = "MPC1"+floor_nrml[k + 1];
                                 capsule.tag = "MPC1";
 
@@ -294,7 +294,7 @@ public class Scatterers_Spawning : MonoBehaviour
                                 var capsuleRenderer2 = capsule2.GetComponent<Renderer>();
                                 //capsuleRenderer2.material.SetColor("_Color", Color.red);
                                 capsuleRenderer2.material = MPC2_mat;
-                                capsule2.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
+                                capsule2.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
                                 capsule2.name = "MPC2"+floor_nrml[k + 1];
                                 capsule2.tag = "MPC2";
 
@@ -328,7 +328,7 @@ public class Scatterers_Spawning : MonoBehaviour
                                 var capsuleRenderer3 = capsule3.GetComponent<Renderer>();
                                 //capsuleRenderer3.material.SetColor("_Color", Color.yellow);
                                 capsuleRenderer3.material = MPC3_mat;
-                                capsule3.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
+                                capsule3.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
                                 capsule3.name = "MPC3"+floor_nrml[k + 1];
                                 capsule3.tag = "MPC3";
 

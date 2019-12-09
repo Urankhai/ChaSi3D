@@ -22,19 +22,27 @@ public class Scatterers_Finder : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        string MPC_name = "MPC1";
 
-        scatterers = GameObject.FindGameObjectsWithTag("MPC1");
-        Debug.Log("Number of MPC1s = " + scatterers.Length);
-        var scatterersRenderer = scatterers[0].GetComponent<Renderer>();
-        //Color initail_color1 = scatterersRenderer.material.GetColor("_Color");
-        //Debug.Log("Color = " + initail_color1);
+        if (MPC_order == 2)
+        {
+            MPC_name = "MPC2";
+        }
+        else if (MPC_order == 3)
+        {
+            MPC_name = "MPC3";
+        }
+        
 
+        scatterers = GameObject.FindGameObjectsWithTag(MPC_name);
+        Debug.Log("Number of MPCs = " + scatterers.Length);
 
+        /*
         scatterers2 = GameObject.FindGameObjectsWithTag("MPC2");
         Debug.Log("Number of MPC2s = " + scatterers2.Length);
 
         scatterers3 = GameObject.FindGameObjectsWithTag("MPC3");
-        Debug.Log("Number of MPC3s = " + scatterers3.Length);
+        Debug.Log("Number of MPC3s = " + scatterers3.Length);*/
 
         antennas = GameObject.FindGameObjectsWithTag("Antenna");
         //Debug.Log("Number of antennas = " + antennas.Length);
@@ -57,15 +65,32 @@ public class Scatterers_Finder : MonoBehaviour
         ant1 = antennas[0];
         ant2 = antennas[1];
 
-        //List<int> inarrayposition11 = new List<int>();
+        string MPC_name = "MPC1";
+
+        if (MPC_order == 2)
+        {
+            MPC_name = "MPC2";
+        }
+        else if (MPC_order == 3)
+        {
+            MPC_name = "MPC3";
+        }
+
+        // LoS path
+        Vector3 LoS = ant1.transform.position - ant2.transform.position;
+        RaycastHit LoS_to, LoS_from;
+        if ( (Physics.Raycast(ant2.transform.position, LoS, out LoS_to)) && (Physics.Raycast(ant1.transform.position, -LoS, out LoS_from)) )
+        {
+            if (LoS_to.collider.tag == "Antenna" && LoS_from.collider.tag == "Antenna")
+            {
+                float LoS_dist = LoS.magnitude;
+                Debug.DrawLine(ant1.transform.position, ant2.transform.position, Color.magenta);
+            }
+        }
+
         List<GameObject> seen_by_ant1 = new List<GameObject>();
-        //List<int> inarrayposition12 = new List<int>();
         List<GameObject> seen_by_ant2 = new List<GameObject>();
-        //List<GameObject>
-        //int count1 = 0;
-        //int count2 = 0;
-        //Collider[] check_mpcs1 = mpcsNearby(ant1);
-        //foreach (Collider check_mpcs in mpcsNearby(ant1))
+
         for (int i = 0; i < scatterers.Length; i++)
         {
             Vector3 AB1 = scatterers[i].transform.position - ant1.transform.position;
@@ -78,84 +103,16 @@ public class Scatterers_Finder : MonoBehaviour
 
                     //Color initcolor = objectRenderer.material.GetColor("_Color");
 
-                    if ((hit_from1.collider.tag == "MPC1") && (hit_to1.collider.tag == "Antenna"))
+                    if ((hit_from1.collider.tag == MPC_name) && (hit_to1.collider.tag == "Antenna"))
                     {
-                        var objectRenderer = scatterers[i].GetComponent<Renderer>();
-                        objectRenderer.material.SetColor("_Color", Color.red);
-                        objectRenderer.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-
                         seen_by_ant1.Add(scatterers[i]);
                     }
-                    else
-                    {
-                        //Debug.Log("Remove element because of the distance");
-                        var rend = scatterers[i].GetComponent<Renderer>();
-                        var init_mat = mat_colors[2].GetComponent<Renderer>();
-                        //rend.material = init_mat.material;
-                        rend.material.SetColor("_Color", init_mat.material.GetColor("_Color"));
-                        seen_by_ant1.Remove(scatterers[i]);
-                    }
                 }
             }
-            else
-            {
-                //Debug.Log("Remove element because of the distance");
-                var rend = scatterers[i].GetComponent<Renderer>();
-                var init_mat = mat_colors[2].GetComponent<Renderer>();
-                rend.material.SetColor("_Color", init_mat.material.GetColor("_Color"));
-                seen_by_ant1.Remove(scatterers[i]);
-            }
+
         }
 
 
-        /*Debug.Log("Size of array " + seen_by_ant1.Count);
-
-        for (int i = 0; i < seen_by_ant1.Count; i++)
-        {
-            Vector3 BA1 = ant1.transform.position - seen_by_ant1[i].transform.position;
-            
-            if (BA1.magnitude >= Vision_Area)
-            {
-                Debug.Log("Remove element because of the distance");
-                var rend = seen_by_ant1[i].GetComponent<Renderer>();
-                var init_mat = mat_colors[2].GetComponent<Renderer>();
-                //rend.material = init_mat.material;
-                rend.material.SetColor("_Color", init_mat.material.GetColor("_Color"));
-                seen_by_ant1.Remove(seen_by_ant1[i]);
-            }
-            RaycastHit hit_to;//, hit_from;
-            if (Physics.Raycast(seen_by_ant1[i].transform.position, BA1, out hit_to))
-            {
-                if (hit_to.collider.tag != "Antenna")
-                {
-                    Debug.Log("Remove element because of blockage");
-                    var rend = seen_by_ant1[i].GetComponent<Renderer>();
-                    var init_mat = mat_colors[2].GetComponent<Renderer>();
-                    //rend.material = init_mat.material;
-                    rend.material.SetColor("_Color", init_mat.material.GetColor("_Color"));
-                    seen_by_ant1.Remove(seen_by_ant1[i]);
-                }
-            }
-            RaycastHit hit_from;
-            if (Physics.Raycast(ant1.transform.position, -BA1, out hit_from))
-            {
-                if (hit_from.collider.tag != "MPC1")
-                {
-                    Debug.Log("Remove element because of blockage");
-                    var rend = seen_by_ant1[i].GetComponent<Renderer>();
-                    var init_mat = mat_colors[2].GetComponent<Renderer>();
-                    //rend.material = init_mat.material;
-                    rend.material.SetColor("_Color", init_mat.material.GetColor("_Color"));
-                    seen_by_ant1.Remove(seen_by_ant1[i]);
-                }
-            }
-            //var objectRenderer = seen_by_ant1[i].GetComponent<Renderer>();
-            //objectRenderer.material.SetColor("_Color", Color.white);
-        }
-        Debug.Log("Size of array " + seen_by_ant1.Count);*/
-
-        //foreach (Collider check_mpcs in mpcsNearby(ant2))
-        //Collider[] check_mpcs2 = mpcsNearby(ant2);
         for (int j = 0; j < scatterers.Length; j++)
         {
             Vector3 AB2 = scatterers[j].transform.position - ant2.transform.position;
@@ -166,43 +123,20 @@ public class Scatterers_Finder : MonoBehaviour
                 RaycastHit hit_from2, hit_to2;
                 if (Physics.Raycast(ant2.transform.position, AB2, out hit_from2) && Physics.Raycast(scatterers[j].transform.position, -AB2, out hit_to2))
                 {
-                    if ((hit_from2.collider.tag == "MPC1") && (hit_to2.collider.tag == "Antenna"))
+                    if ((hit_from2.collider.tag == MPC_name) && (hit_to2.collider.tag == "Antenna"))
                     {
-                        /*var objectRenderer = scatterers[j].GetComponent<Renderer>();
-                        objectRenderer.material.SetColor("_Color", Color.blue);
-                        objectRenderer.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);*/
-
                         seen_by_ant2.Add(scatterers[j]);
                     }
-                    else
-                    {
-                        //Debug.Log("Remove element because of the distance");
-                        //var rend = scatterers[j].GetComponent<Renderer>();
-                        //var init_mat = mat_colors[2].GetComponent<Renderer>();
-                        //rend.material = init_mat.material;
-                        //rend.material.SetColor("_Color", init_mat.material.GetColor("_Color"));
-                        seen_by_ant2.Remove(scatterers[j]);
-                    }
+
                 }
             }
-            else
-            {
-                //Debug.Log("Remove element because of the distance");
-                //var rend = scatterers[j].GetComponent<Renderer>();
-                //var init_mat = mat_colors[2].GetComponent<Renderer>();
-                //rend.material.SetColor("_Color", init_mat.material.GetColor("_Color"));
-                seen_by_ant2.Remove(scatterers[j]);
-            }
+
         }
-
-
 
 
 
         if (MPC_order == 1)
         {
-            //Debug.Log("Searchign for MPC1");
-            //finding first order reflecting points
             List<GameObject> frst_ordr = new List<GameObject>();
             for (int k = 0; k < seen_by_ant1.Count; k++)
             {
@@ -212,8 +146,10 @@ public class Scatterers_Finder : MonoBehaviour
                     {
                         frst_ordr.Add(seen_by_ant1[k]);
                         var objectRenderer = seen_by_ant1[k].GetComponent<Renderer>();
-                        objectRenderer.material.SetColor("_Color", Color.cyan);
-                        objectRenderer.transform.localScale = new Vector3(1.7f, 1.7f, 1.7f);
+                        //objectRenderer.material.SetColor("_Color", Color.cyan);
+                        objectRenderer.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                        Debug.DrawLine(ant1.transform.position, seen_by_ant1[k].transform.position, Color.green);
+                        Debug.DrawLine(seen_by_ant1[k].transform.position, ant2.transform.position, Color.green);
                     }
 
                 }
@@ -230,22 +166,34 @@ public class Scatterers_Finder : MonoBehaviour
                 for (int l = 0; l < seen_by_ant2.Count; l++)
                 {
                     Vector3 AB = seen_by_ant1[k].transform.position - seen_by_ant2[l].transform.position;
-                    if (AB.magnitude < 30.0f)
+                    if (AB.magnitude < 40.0f)
                     {
-                        scnd_ordr.Add(seen_by_ant2[l]);
+                        RaycastHit hit_to, hit_from;
+                        if ((Physics.Raycast(seen_by_ant2[l].transform.position, AB, out hit_to)) && (Physics.Raycast(seen_by_ant1[k].transform.position, -AB, out hit_from)))
+                        {
+                            if (hit_to.collider.tag == MPC_name && hit_from.collider.tag == MPC_name)
+                            {
+                                scnd_ordr.Add(seen_by_ant2[l]);
 
-                        var objectRenderer1 = seen_by_ant2[l].GetComponent<Renderer>();
-                        objectRenderer1.material.SetColor("_Color", Color.red);
-                        objectRenderer1.transform.localScale = new Vector3(1.7f, 1.7f, 1.7f);
+                                var objectRenderer1 = seen_by_ant2[l].GetComponent<Renderer>();
+                                //objectRenderer1.material.SetColor("_Color", Color.red);
+                                objectRenderer1.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
 
-                        var objectRenderer2 = seen_by_ant1[k].GetComponent<Renderer>();
-                        objectRenderer2.material.SetColor("_Color", Color.red);
-                        objectRenderer2.transform.localScale = new Vector3(1.7f, 1.7f, 1.7f);
+                                var objectRenderer2 = seen_by_ant1[k].GetComponent<Renderer>();
+                                //objectRenderer2.material.SetColor("_Color", Color.red);
+                                objectRenderer2.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+
+                                Debug.DrawLine(ant1.transform.position, seen_by_ant1[k].transform.position, Color.red);
+                                Debug.DrawLine(seen_by_ant1[k].transform.position, seen_by_ant2[l].transform.position, Color.red);
+                                Debug.DrawLine(seen_by_ant2[l].transform.position, ant2.transform.position, Color.red);
+                            }
+                        }
+
                     }
                 }
             }
             scnd_ordr = scnd_ordr.Distinct().ToList();
-            Debug.Log("Number of second order reflectors = " + scnd_ordr.Count);
+            //Debug.Log("Number of second order reflectors = " + scnd_ordr.Count);
         }
 
         if (MPC_order == 3)
@@ -263,40 +211,47 @@ public class Scatterers_Finder : MonoBehaviour
                     {
                         Vector3 p2p = scatterers[ii].transform.position - seen_by_ant1[kk].transform.position;
                         //if (p2p.magnitude < Vision_Area)
-                        if (p2p.magnitude < 20.0f)
+                        if (p2p.magnitude < 40.0f)
                         {
 
                             RaycastHit hit_to, hit_from;
                             if ((Physics.Raycast(seen_by_ant1[kk].transform.position, p2p, out hit_to)) && (Physics.Raycast(scatterers[ii].transform.position, -p2p, out hit_from)))
                             {
 
-                                if (hit_to.collider.tag == "MPC1" && hit_from.collider.tag == "MPC1")
-                                //if ((hit_to.collider.tag == "Reflecting_Obstacles" || hit_from.collider.tag == "Reflecting_Obstacles"))
-                                //{
-                                //    Debug.Log("Walls hit");
-                                //}
-                                //else
+                                if (hit_to.collider.tag == MPC_name && hit_from.collider.tag == MPC_name)
                                 {
-                                    //Debug.DrawLine(scatterers[ii].transform.position,seen_by_ant1[kk].transform.position, Color.green);
-
 
                                     for (int ll = 0; ll < seen_by_ant2.Count; ll++)
                                     {
+                                        if (scatterers[ii].transform.position != seen_by_ant2[ll].transform.position)
+                                        {
                                         Vector3 p2pp2p = seen_by_ant2[ll].transform.position - scatterers[ii].transform.position;
-                                        if (p2pp2p.magnitude < 20.0f)
+                                        //string name_asd = seen_by_ant2[ll].name;
+                                        //Vector3
+                                        //Debug.Log("asdasdas " + seen_by_ant2[ll].name);
+                                        //Debug.Log("asdasdas " + seen_by_ant2[ll].name.Length);
+                                        //Debug.Log("asdasdas " + name_asd.Substring(4,name_asd.Length - 4));
+
+                                        if (p2pp2p.magnitude < 40.0f)
                                         {
                                             RaycastHit hit_to2, hit_from2;
                                             if ((Physics.Raycast(scatterers[ii].transform.position, p2pp2p, out hit_to2)) && (Physics.Raycast(seen_by_ant2[ll].transform.position, -p2pp2p, out hit_from2)))
                                             {
-                                                if (hit_to2.collider.tag == "MPC1" && hit_from2.collider.tag == "MPC1")
+                                                if (hit_to2.collider.tag == MPC_name && hit_from2.collider.tag == MPC_name)
                                                 {
-                                                    Debug.DrawLine(scatterers[ii].transform.position, seen_by_ant2[ll].transform.position, Color.red);
+                                                    
                                                     mpc_to_mpc.Add(scatterers[ii]);
                                                     var p2pRenderer1 = scatterers[ii].GetComponent<Renderer>();
-                                                    p2pRenderer1.material.SetColor("_Color", Color.green);
-                                                    p2pRenderer1.transform.localScale = new Vector3(1.7f, 1.7f, 1.7f);
+                                                    //p2pRenderer1.material.SetColor("_Color", Color.green);
+                                                    p2pRenderer1.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+
+                                                    Debug.DrawLine(ant1.transform.position, seen_by_ant1[kk].transform.position, Color.green);
+                                                    Debug.DrawLine(seen_by_ant1[kk].transform.position, scatterers[ii].transform.position, Color.yellow);
+                                                    Debug.DrawLine(scatterers[ii].transform.position, seen_by_ant2[ll].transform.position, Color.yellow);
+                                                    Debug.DrawLine(seen_by_ant2[ll].transform.position, ant2.transform.position, Color.green);
                                                 }
                                             }
+                                        }
                                         }
                                     }
                                 }
@@ -307,7 +262,7 @@ public class Scatterers_Finder : MonoBehaviour
                 }
             }
 
-            Debug.Log("Number of seen scatterers = " + mpc_to_mpc.Count);
+            //Debug.Log("Number of seen scatterers = " + mpc_to_mpc.Count);
         }
 
 

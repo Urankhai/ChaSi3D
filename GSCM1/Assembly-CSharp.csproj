@@ -59,6 +59,7 @@
      <Compile Include="Assets\Scripts\reflectionCalculation.cs" />
      <Compile Include="Assets\Scripts\Scatterers_Finder.cs" />
      <Compile Include="Assets\Scripts\Scatterers_Finder_org.cs" />
+     <Compile Include="Assets\Scripts\Scatterers_Finder_upd.cs" />
      <Compile Include="Assets\Scripts\Scatterers_Spawning.cs" />
  <Reference Include="Unity.TextMeshPro.Editor">
  <HintPath>/home/aleksei/ChaSi3D/GSCM1/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
